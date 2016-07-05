@@ -1,0 +1,15 @@
+- name: fetch tar file
+  fetch:
+    src: "{{ oooq_vms_path }}/{{ oooq_tar_name }}"
+    dest: "oooq_vms"
+
+- name: upload file to http server
+  delegate_to: localhost
+  when: not direct_upload
+  shell: >
+    scp -o StrictHostKeyChecking=no {{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}
+
+- name: upload file to http server
+  when: direct_upload
+  shell: >
+    scp -o StrictHostKeyChecking=no {{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}

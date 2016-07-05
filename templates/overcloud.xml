@@ -1,0 +1,4 @@
+<network>
+  <name>overcloud</name>
+  <bridge name='brovc' stp='off' delay='0'/>
+</network>

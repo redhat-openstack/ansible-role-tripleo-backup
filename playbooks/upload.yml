@@ -1,0 +1,8 @@
+---
+- name: Upload oooq deployment
+  hosts: virthost
+  tags:
+    - tripleo-upload
+  roles:
+    - { role: ansible-role-tripleo-backup,
+        upload: true }

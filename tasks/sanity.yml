@@ -1,0 +1,5 @@
+---
+- name: check openstack services
+  service: name={{item}} state=started
+  sudo: yes
+  with_items: "{{ services }}"

@@ -1,0 +1,71 @@
+---
+- name: stop oooq vms
+  ignore_errors: true
+  shell: >
+    virsh destroy {{ item }}
+  with_items: "{{ vms }}"
+
+- name: remove tripleo vms working dir
+  file:
+    path: "{{ oooq_vms_path }}"
+    state: absent
+  become: true
+
+- name: make tripleo vms working dir
+  file:
+    path: "{{ oooq_vms_path }}"
+    state: directory
+    group: "{{ oooq_user }}"
+    owner: "{{ oooq_user }}"
+  become: true
+
+- name: get overcloud nodes ips
+  register: overcloud
+  delegate_to: localhost
+  shell: "grep -C 3 '{{ item.name }}' {{ local_working_dir }}/ssh.config.ansible | grep 'undercloud -W' | awk '{print$13}' | cut -d ':' -f 1"
+  with_items: "{{ overcloud_nodes }}"
+
+- name: set fact for overcloud nodes info
+  set_fact: ssh_overcloud_nodes={{ overcloud.results }}
+
+- name: copy hosts and ssh config file
+  template:
+    src: "{{ item }}"
+    dest: "{{ oooq_vms_path }}/{{ item }}"
+  with_items: "{{ ansible_files }}"
+
+- name: copy undercloud private key
+  copy:
+    src: "{{ local_working_dir }}/{{ item.file }}"
+    dest: "{{ oooq_vms_path }}/{{ item.file }}"
+    mode: "{{ item.mode }}"
+    group: "{{ oooq_user }}"
+    owner: "{{ oooq_user }}"
+  with_items: "{{ oooq_files }}"
+
+- name: copy oooq pool
+  shell: >
+    cp -R {{ pool_path }} {{ oooq_vms_path }}/pool
+
+- name: copy vms xml desc
+  shell: >
+    cp /home/stack/.config/libvirt/qemu/{{ item }}.xml {{ oooq_vms_path }}
+  with_items: "{{ vms }}"
+
+- name: copy oooq pool xml desc
+  template:
+    src: "{{ item }}"
+    dest: "{{ oooq_vms_path }}/{{ item }}"
+  with_items:
+    - oooq_pool.xml
+    - external.xml
+    - overcloud.xml
+
+- name: fix cpu arch
+  shell: >
+    sed -i 's/rhel7\.2/rhel7\.0/' {{ oooq_vms_path }}/{{ item }}
+  with_items: "{{ vms }}"
+
+- name: tar oooq_vms
+  shell: >
+    tar -cvzf {{ oooq_tar_name }} {{ oooq_vms_path }}

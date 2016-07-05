@@ -1,0 +1,41 @@
+localhost ansible_connection=local
+
+{{ virthost }} ansible_host={{ virthost }} ansible_user=stack ansible_private_key_file=id_rsa_virt_host undercloud_ip={{ undercloud_ip }}
+
+undercloud ansible_host=undercloud ansible_user=stack ansible_private_key_file=id_rsa_undercloud undercloud_ip={{ undercloud_ip }}
+
+{% for node in overcloud_nodes %}
+{{ node.name }} ansible_host={{ node.name }} ansible_user=heat-admin ansible_private_key_file=id_rsa_overcloud
+{% endfor %}
+
+[virthost]
+{{ virthost }}
+
+[undercloud]
+undercloud
+
+{% for node in overcloud_nodes %}
+{% if 'compute' in node.type %}
+[compute]
+{{ node.name }}
+{% endif %}
+{% endfor %}
+
+{% for node in overcloud_nodes %}
+{% if 'ceph' in node.type %}
+[cephstorage]
+{{ node.name }}
+{% endif %}
+{% endfor %}
+
+{% for node in overcloud_nodes %}
+{% if 'controller' in node.type %}
+[controller]
+{{ node.name }}
+{% endif %}
+{% endfor %}
+
+[overcloud]
+{% for node in overcloud_nodes %}
+{{ node.name }}
+{% endfor %}

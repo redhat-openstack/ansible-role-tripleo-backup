@@ -1,0 +1,45 @@
+---
+- name: check or install required packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - libvirt
+    - qemu-kvm
+
+- name: remove tripleo vms working dir
+  file:
+    path: "{{ oooq_vms_path }}"
+    state: absent
+  become: true
+
+- name: download tar file
+  get_url:
+    url: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
+    dest: "{{ oooq_tar_path }}"
+
+- name: untar tripleo vms
+  shell: >
+    tar -xzf {{ oooq_tar_path }}/{{ oooq_tar_name }};
+    mv var/oooqvms/ /var
+
+- name: destroy network if exist
+  ignore_errors: true
+  with_items: "{{ networks_name }}"
+  shell: >
+    if virsh net-list | grep {{ item }}; then
+        virsh net-destroy {{ item }}
+        virsh net-undefine {{ item }}
+    fi
+
+- name: create oooq_pool
+  shell: >
+    virsh pool-create {{ oooq_vms_path }}/{{ pool_name }}.xml
+
+- name: create networks
+  shell: >
+    virsh net-create {{ oooq_vms_path }}/{{ item }}.xml
+  with_items: "{{ networks_name }}"
+
+- name: start vms
+  shell: >
+    virsh create {{ oooq_vms_path }}/{{ item }}.xml
+  with_items: "{{ vms }}"

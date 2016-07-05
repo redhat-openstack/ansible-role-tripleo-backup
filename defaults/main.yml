@@ -1,0 +1,56 @@
+---
+# defaults file for tripleo-backup
+local_working_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
+virthost: "{{ lookup('env', 'VIRTHOST') }}"
+undercloud_ip: "{{ lookup('env', 'UNDERCLOUD_IP') }}"
+
+oooq_files:
+  - { file: "id_rsa_undercloud", mode: 600 }
+  - { file: "id_rsa_virt_host", mode: 600 }
+
+ansible_files:
+    - ssh.config.ansible
+    - hosts
+
+undercloud_key: id_rsa_undercloud
+oooq_user: stack
+pool_path: /home/stack/.quickstart/pool
+vms_xml_files_path: /home/stack/.config/libvirt/qemu
+vms:
+  - undercloud
+  - compute_0
+  - control_0
+#  - ceph_0
+
+overcloud_nodes:
+  - { type: "compute", name: "overcloud-novacompute-0", ansible_name: "overcloud_novacompute_0" }
+  - { type: "controller", name: "overcloud-controller-0", ansible_name: "controller" }
+#  - { type: "ceph", name: "overcloud-cephstorage-0", ansible_name: "cephstorage" }
+
+oooq_vms_path: /var/oooqvms
+oooq_vms_pool_path: /var/oooqvms/pool
+oooq_tar_path: /tmp
+oooq_tar_name: tripleo.tar.gz
+
+pool_name: oooq_pool
+networks_name:
+  - external
+  - overcloud
+
+backup: false
+restore: false
+upload: false
+
+services:
+  - neutron-server
+  - glance-api
+  - keytsone
+
+http_server: rhos-release.virt.bos.redhat.com
+http_user: jenkins
+http_path: ci-images/rdo/liberty/live/
+http_server_path: "/var/www/html/{{ http_path }}"
+proto: http
+# this option allow user to directly upload the backup, instead of fetching the
+# file before. With some security context, both use case can be needed
+direct_upload: false
