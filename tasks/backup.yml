@@ -63,7 +63,7 @@
 
 - name: fix cpu arch
   shell: >
-    sed -i 's/rhel7\.2/rhel7\.0/' {{ oooq_vms_path }}/{{ item }}
+    sed -i 's/rhel7\.2/rhel7\.0/' {{ oooq_vms_path }}/{{ item }}.xml
   with_items: "{{ vms }}"
 
 - name: tar oooq_vms
