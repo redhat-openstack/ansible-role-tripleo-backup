@@ -5,7 +5,7 @@
 
 - name: upload file to http server
   delegate_to: localhost
-  when: not direct_upload
+  when: not direct_upload|bool
   shell: >
     scp -o StrictHostKeyChecking=no {{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}
 
