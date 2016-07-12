@@ -1,26 +1,29 @@
 ---
 - name: Restore oooq deployment
   hosts: virthost
+  gather_facts: no
   tags:
     - tripleo-restore
   roles:
-    - { role: ansible-role-tripleo-backup,
+    - { role: tripleo-backup,
         restore: true }
 
 - name: Sanity checks the undercloud services
   hosts: undercloud
+  gather_facts: no
   tags:
     - tripleo-restore-uc-sanity
   roles:
-    - { role: ansible-role-tripleo-backup,
+    - { role: tripleo-backup,
         restore: true,
         services: ["keystone", "glance-api"] }
 
 - name: Sanity checks the overcloud services
   hosts: overcloud
+  gather_facts: no
   tags:
     - tripleo-restore-uc-sanity
   roles:
-    - { role: ansible-role-tripleo-backup,
+    - { role: tripleo-backup,
         restore: true,
         services: ["keystone", "glance-api", "neutron-server"] }
