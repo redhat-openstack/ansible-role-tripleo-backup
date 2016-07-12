@@ -1,8 +1,9 @@
 ---
 - name: Backup oooq deployment
   hosts: virthost
+  gather_facts: no
   tags:
     - tripleo-backup
   roles:
-    - { role: ansible-role-tripleo-backup,
+    - { role: tripleo-backup,
         backup: true }
