@@ -4,11 +4,18 @@
   with_items:
     - libvirt
     - qemu-kvm
+    - net-tools
 
 - name: remove tripleo vms working dir
   file:
     path: "{{ oooq_vms_path }}"
     state: absent
+  become: true
+
+- name: create tripleo vms working dir
+  file:
+    path: "{{ oooq_tar_path }}"
+    state: directory
   become: true
 
 - name: download tar file
@@ -17,9 +24,12 @@
     dest: "{{ oooq_tar_path }}"
 
 - name: untar tripleo vms
-  shell: >
-    tar -xzf {{ oooq_tar_path }}/{{ oooq_tar_name }};
-    mv var/oooqvms/ /var
+  unarchive:
+    src: "{{ oooq_tar_path }}/{{ oooq_tar_name }}"
+    dest: "/"
+    copy: no
+# @TODO: matbu test out this rather than fetch and untar
+#    src: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
 
 - name: destroy network if exist
   ignore_errors: true

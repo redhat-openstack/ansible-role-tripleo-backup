@@ -28,7 +28,7 @@ overcloud_nodes:
 #  - { type: "ceph", name: "overcloud-cephstorage-0", ansible_name: "cephstorage" }
 
 oooq_vms_path: /var/oooqvms
-oooq_vms_pool_path: /var/oooqvms/pool
+oooq_vms_pool_path: "{{ oooq_vms_path }}/pool"
 oooq_tar_path: /tmp
 oooq_tar_name: tripleo.tar.gz
 
