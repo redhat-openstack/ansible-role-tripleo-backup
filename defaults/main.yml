@@ -1,12 +1,14 @@
 ---
 # defaults file for tripleo-backup
 local_working_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
-virthost: "{{ lookup('env', 'VIRTHOST') }}"
-undercloud_ip: "{{ lookup('env', 'UNDERCLOUD_IP') }}"
+virthost: "$VIRTHOST"
+undercloud_ip: "$UC_IP"
 
 oooq_files:
   - { file: "id_rsa_undercloud", mode: 600 }
   - { file: "id_rsa_virt_host", mode: 600 }
+  - { file: "id_rsa_virt_power", mode: 600 }
+  - { file: "id_rsa_overcloud", mode: 600 }
 
 ansible_files:
     - ssh.config.ansible
@@ -40,6 +42,7 @@ networks_name:
 backup: false
 restore: false
 upload: false
+sanity: false
 
 services:
   - neutron-server
@@ -54,3 +57,5 @@ proto: http
 # this option allow user to directly upload the backup, instead of fetching the
 # file before. With some security context, both use case can be needed
 direct_upload: false
+
+oooq_cird: 192.168.23
