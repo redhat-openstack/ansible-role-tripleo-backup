@@ -6,9 +6,15 @@ VIRTHOST=$3
 virtualenv --system-site-packages $WORKDIR
 . $WORKDIR/bin/activate
 # install role and deps
-python setup.py install
-pip install --no-cache-dir -r requirements.txt
-
+if [ -d tripleo-backup ]; then
+    pushd tripleo-backup
+    python setup.py install
+    pip install --no-cache-dir -r requirements.txt
+    popd
+else
+    python setup.py install
+    pip install --no-cache-dir -r requirements.txt
+fi
 cat <<EOF> hosts
 $VIRTHOST ansible_host=$VIRTHOST ansible_user=root ansible_private_key_file=~/.ssh/id_rsa
 [virthost]
