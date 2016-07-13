@@ -7,6 +7,7 @@
   roles:
     - { role: tripleo-backup,
         restore: true,
+        jenkins: true,
         oooq_tar_path: '/home' }
 
 - name: Sanity checks the undercloud services
@@ -16,8 +17,8 @@
     - tripleo-restore-uc-sanity
   roles:
     - { role: tripleo-backup,
-        restore: true,
-        services: ["keystone", "glance-api"] }
+        sanity: true,
+        services: ["openstack-keystone", "openstack-glance-api"] }
 
 - name: Sanity checks the overcloud services
   hosts: overcloud
@@ -26,5 +27,5 @@
     - tripleo-restore-uc-sanity
   roles:
     - { role: tripleo-backup,
-        restore: true,
-        services: ["keystone", "glance-api", "neutron-server"] }
+        sanity: true,
+        services: ["openstack-keystone", "openstack-glance-api", "neutron-server"] }

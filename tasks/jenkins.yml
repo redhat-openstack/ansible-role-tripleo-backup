@@ -1,0 +1,38 @@
+---
+- name: get the undercloud ip
+  register: undercloudip
+  shell: >
+    arp -n | grep {{ oooq_cird }} | awk '{ print $1 }'
+
+- name: set fact for undercloud ip
+  set_fact: undercloud_ip={{ undercloudip.stdout }}
+
+- name: fetch ansible files to localhost
+  with_items: "{{ ansible_files }}"
+  fetch:
+    src: "{{ oooq_vms_path }}/{{ item }}"
+    dest: "{{ local_working_dir }}/"
+    flat: yes
+
+- name: fetch private key files to localhost
+  with_items: "{{ oooq_files }}"
+  fetch:
+    src: "{{ oooq_vms_path }}/{{ item.file }}"
+    dest: "{{ local_working_dir }}/"
+    flat: yes
+
+- name: override env variables into the ansible files
+  delegate_to: localhost
+  with_items: "{{ ansible_files }}"
+  replace:
+    dest: "{{ local_working_dir }}/{{ item }}"
+    regexp: "\\$UC_IP"
+    replace: "{{ undercloud_ip }}"
+
+- name: override env variables into the ansible files
+  delegate_to: localhost
+  with_items: "{{ ansible_files }}"
+  replace:
+    dest: "{{ local_working_dir }}/{{ item }}"
+    regexp: "\\$VIRTHOST"
+    replace: "{{ virthost }}"
