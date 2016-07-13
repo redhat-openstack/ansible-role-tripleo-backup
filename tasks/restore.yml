@@ -66,3 +66,6 @@
   shell: >
     virsh create {{ oooq_vms_path }}/{{ item }}.xml
   with_items: "{{ vms }}"
+
+- name: pause for let the undercloud boot
+  pause: seconds=30
