@@ -11,15 +11,15 @@
   ignore_errors: true
   with_items: "{{ vms }}"
   shell: >
-    virsh destroy {{ item }}
-    virsh undefine {{ item }}
+    virsh destroy {{ item }};
+    virsh undefine {{ item }};
 
 - name: destroy network if exist
   ignore_errors: true
   with_items: "{{ networks_name }}"
   shell: >
     if virsh net-list | grep {{ item }}; then
-        virsh net-destroy {{ item }}
+        virsh net-destroy {{ item }};
         virsh net-undefine {{ item }}
     fi
 
