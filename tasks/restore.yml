@@ -31,6 +31,14 @@
 # @TODO: matbu test out this rather than fetch and untar
 #    src: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
 
+# @TODO matbu: make a teardown set of tasks and tags
+- name: destroy vms
+  ignore_errors: true
+  with_items: "{{ vms }}"
+  shell: >
+    virsh destroy {{ item }}
+    virsh undefine {{ item }}
+
 - name: destroy network if exist
   ignore_errors: true
   with_items: "{{ networks_name }}"
@@ -39,6 +47,11 @@
         virsh net-destroy {{ item }}
         virsh net-undefine {{ item }}
     fi
+
+- name: destroy pool
+  ignore_errors: true
+  shell: >
+    virsh pool-destroy {{ pool_name }}
 
 - name: create oooq_pool
   shell: >

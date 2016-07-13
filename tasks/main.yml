@@ -16,7 +16,12 @@
   tags:
     - tripleo-restore
 
-- include: sanity.yml
+- include: jenkins.yml
   when: restore
+  tags:
+    - tripleo-jenkins
+
+- include: sanity.yml
+  when: sanity
   tags:
     - tripleo-restore-sanity
