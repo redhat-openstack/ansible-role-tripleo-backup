@@ -1,22 +1,27 @@
----
-- include: backup.yml
-  when: backup
-  tags:
-    - tripleo-backup
+#---
+#- include: backup.yml
+#  when: backup
+#  tags:
+#    - tripleo-backup
 
-# Note: the upload task is set in a dedicated tasks file since in a degraded env
-# (slow network connectivity for example) we don't want to fetch and upload
-- include: upload.yml
-  when: upload
-  tags:
-    - tripleo-upload
+## Note: the upload task is set in a dedicated tasks file since in a degraded env
+## (slow network connectivity for example) we don't want to fetch and upload
+#- include: upload.yml
+#  when: upload
+#  tags:
+#    - tripleo-upload
 
-- include: restore.yml
+#- include: restore.yml
+#  when: restore
+#  tags:
+#    - tripleo-restore
+
+- include: jenkins.yml
   when: restore
   tags:
-    - tripleo-restore
+    - tripleo-jenkins
 
 - include: sanity.yml
-  when: restore
+  when: sanity
   tags:
     - tripleo-restore-sanity
