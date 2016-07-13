@@ -2,6 +2,7 @@
 # defaults file for tripleo-backup
 local_working_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
 virthost: "$VIRTHOST"
+virthost_user: root
 undercloud_ip: "$UC_IP"
 
 oooq_files:

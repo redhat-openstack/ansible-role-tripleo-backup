@@ -25,6 +25,8 @@ if [ $ACTION == 'restore' ]; then
     ansible-playbook -i hosts -vvvv playbooks/$ACTION.yml \
         --extra-vars local_working_dir=$WORKDIR \
         --extra-vars virthost=$VIRTHOST
+    ansible-playbook -i hosts -vvvv playbooks/sanity.yml \
+        --extra-vars local_working_dir=$WORKDIR
 else
     ansible-playbook -i hosts -vvvv playbooks/$ACTION.yml \
         --extra-vars local_working_dir=$WORKDIR

@@ -13,7 +13,7 @@ Host undercloud-root
     UserKnownHostsFile=/dev/null
 
 Host undercloud
-    ProxyCommand ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=60 -i id_rsa_virt_host stack@{{ virthost }} -W {{ undercloud_ip }}:22
+    ProxyCommand ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=60 -i id_rsa_virt_host {{ virthost_user }}@{{ virthost }} -W {{ undercloud_ip }}:22
     IdentityFile id_rsa_undercloud
     User stack
     StrictHostKeyChecking no
