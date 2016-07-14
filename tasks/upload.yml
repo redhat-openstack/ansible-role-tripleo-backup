@@ -1,7 +1,9 @@
 - name: fetch tar file
+  when: not direct_upload|bool
   fetch:
-    src: "{{ oooq_vms_path }}/{{ oooq_tar_name }}"
+    src: "/root/{{ oooq_tar_name }}"
     dest: "oooq_vms"
+    flat: yes
 
 - name: upload file to http server
   delegate_to: localhost
