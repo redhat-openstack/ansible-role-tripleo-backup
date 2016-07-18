@@ -56,7 +56,7 @@ services:
 
 http_server: rhos-release.virt.bos.redhat.com
 http_user: jenkins
-http_path: ci-images/rdo/liberty/live/
+http_path: ci-images/live/rdo/liberty/
 http_server_path: "/var/www/html/{{ http_path }}"
 proto: http
 # this option allow user to directly upload the backup, instead of fetching the
