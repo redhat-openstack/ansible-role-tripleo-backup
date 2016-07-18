@@ -3,6 +3,7 @@
 local_working_dir: "{{ lookup('env', 'HOME') }}/.quickstart"
 virthost: "$VIRTHOST"
 virthost_user: root
+virthost_key: "~/.ssh/id_rsa"
 undercloud_ip: "$UC_IP"
 
 oooq_files:

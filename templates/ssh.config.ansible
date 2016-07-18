@@ -1,7 +1,7 @@
 Host virthost
     Hostname {{ virthost }}
-    IdentityFile id_rsa_virt_power
-    User stack
+    IdentityFile {{ virthost_key }}
+    User {{ virthost_user }}
     StrictHostKeyChecking no
     UserKnownHostsFile=/dev/null
 
