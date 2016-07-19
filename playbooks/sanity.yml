@@ -10,7 +10,7 @@
         services: ["openstack-glance-api"] }
 
 - name: Sanity checks the overcloud services
-  hosts: overcloud
+  hosts: controller
   gather_facts: no
   tags:
     - tripleo-restore-oc-sanity

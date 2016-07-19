@@ -21,6 +21,9 @@ $VIRTHOST ansible_host=$VIRTHOST ansible_user=root ansible_private_key_file=~/.s
 $VIRTHOST
 EOF
 # launch ansible
+if [ ! -f "ssh.config.ansible" ]; then
+  echo "" > ssh.config.ansible
+fi
 export ANSIBLE_SSH_ARGS=' -F ssh.config.ansible'
 if [ $ACTION == 'restore' ]; then
     ansible-playbook -i hosts -vvvv playbooks/$ACTION.yml \
