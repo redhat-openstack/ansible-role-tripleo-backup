@@ -1,0 +1,7 @@
+Code-Review+2: mathieu bultel <mat.bultel@gmail.com>
+Verified+1: mathieu bultel <mat.bultel@gmail.com>
+Submitted-by: mathieu bultel <mat.bultel@gmail.com>
+Submitted-at: Wed, 17 Aug 2016 07:07:05 -0400
+Reviewed-on: https://review.gerrithub.io/287649
+Project: redhat-openstack/ansible-role-tripleo-backup
+Branch: refs/heads/master
