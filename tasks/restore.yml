@@ -6,6 +6,9 @@
     - qemu-kvm
     - net-tools
 
+- name: make sure libvirt is started
+  service: name=libvirt state=started
+
 # @TODO matbu: make a teardown set of tasks and tags
 - name: destroy vms
   ignore_errors: true
