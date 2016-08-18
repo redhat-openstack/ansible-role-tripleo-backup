@@ -43,14 +43,32 @@
     state: directory
   become: true
 
+- name: get expected checksum
+  command: >
+    curl -sf {{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}.md5
+  register: md5_expected
+
+- name: set path to cached image
+  set_fact:
+    image_cache_path: "{{ oooq_tar_path }}/{{ md5_expected.stdout.split()[0] }}.{{ image.type }}"
+
+- name: check for image in cache
+  command: >
+    test -f {{ image_cache_path }}
+  args:
+    chdir: "{{ image_cache_dir }}"
+  ignore_errors: true
+  register: image_exists
+
 - name: download tar file
+  when: not image_exists|bool
   get_url:
     url: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
-    dest: "{{ oooq_tar_path }}"
+    dest: "{{ image_cache_dir }}"
 
 - name: untar tripleo vms
   unarchive:
-    src: "{{ oooq_tar_path }}/{{ oooq_tar_name }}"
+    src: "{{ image_cache_dir }}/{{ oooq_tar_name }}"
     dest: "/"
     copy: no
 # @TODO: matbu test out this rather than fetch and untar
