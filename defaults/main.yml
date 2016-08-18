@@ -33,7 +33,7 @@ overcloud_nodes:
 
 oooq_vms_path: /var/oooqvms
 oooq_vms_pool_path: "{{ oooq_vms_path }}/pool"
-oooq_tar_path: /tmp
+oooq_tar_path: /var/cache/ooo-snap
 oooq_tar_name: tripleo.tar.gz
 
 pool_name: oooq_pool
