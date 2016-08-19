@@ -2,7 +2,7 @@
 - name: get the undercloud ip
   register: undercloudip
   until: undercloudip.stdout != ''
-  retries: 8
+  retries: 30
   delay: 10
   shell: >
     arp -n | grep {{ oooq_cird }} | awk '{ print $1 }'
