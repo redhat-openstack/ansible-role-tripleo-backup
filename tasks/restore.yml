@@ -31,12 +31,6 @@
   shell: >
     virsh pool-destroy {{ pool_name }}
 
-- name: remove tripleo vms working dir
-  file:
-    path: "{{ oooq_vms_path }}"
-    state: absent
-  become: true
-
 - name: create tripleo vms working dir
   file:
     path: "{{ oooq_tar_path }}"
@@ -44,11 +38,13 @@
   become: true
 
 - name: download tar file
+  register: download
   get_url:
     url: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
     dest: "{{ oooq_tar_path }}"
 
 - name: untar tripleo vms
+  when: download.changed|bool
   unarchive:
     src: "{{ oooq_tar_path }}/{{ oooq_tar_name }}"
     dest: "/"
