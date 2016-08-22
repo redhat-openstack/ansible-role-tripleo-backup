@@ -5,7 +5,9 @@
   retries: 30
   delay: 10
   shell: >
-    arp -n | grep {{ oooq_cird }} | awk '{ print $1 }'
+    for i in $(virsh dumpxml undercloud | grep 'mac address'  | cut -f 2 -d "'"); do
+        arp -n | grep $i |  awk '{ print $1 }';
+    done
 
 - name: set fact for undercloud ip
   set_fact: undercloud_ip={{ undercloudip.stdout }}
