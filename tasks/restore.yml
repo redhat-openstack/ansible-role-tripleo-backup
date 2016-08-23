@@ -9,6 +9,12 @@
 - name: make sure libvirtd is started
   service: name=libvirtd state=started
 
+- name: remove tripleo vms working dir
+  file:
+    path: "{{ oooq_vms_path }}"
+    state: absent
+  become: true
+
 # @TODO matbu: make a teardown set of tasks and tags
 - name: destroy vms
   ignore_errors: true
@@ -43,14 +49,24 @@
     url: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
     dest: "{{ oooq_tar_path }}"
 
+- name: test if oooq tmp tar dir is present
+  register: test_dir
+  ignore_errors: true
+  shell: >
+    test -d /tmp/var/oooqvms
+
 - name: untar tripleo vms
-  when: download.changed|bool
+  when: download.changed|bool and test_dir.rc == 1
   unarchive:
     src: "{{ oooq_tar_path }}/{{ oooq_tar_name }}"
-    dest: "/"
+    dest: "/tmp"
     copy: no
 # @TODO: matbu test out this rather than fetch and untar
 #    src: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
+
+- name: move oooq file
+  shell: >
+    mv /tmp/var/oooqvms {{ oooq_vms_path }}
 
 - name: create oooq_pool
   shell: >
