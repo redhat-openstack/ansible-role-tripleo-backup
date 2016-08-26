@@ -2,16 +2,16 @@
   when: not direct_upload|bool
   fetch:
     src: "/root/{{ oooq_tar_name }}"
-    dest: "oooq_vms"
+    dest: "{{ local_working_dir }}/{{ oooq_tar_name }}"
     flat: yes
 
 - name: upload file to http server
   delegate_to: localhost
   when: not direct_upload|bool
   shell: >
-    scp -o StrictHostKeyChecking=no {{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}
+    scp -o StrictHostKeyChecking=no {{ local_working_dir }}/{{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}
 
 - name: upload file to http server
   when: direct_upload
   shell: >
-    scp -o StrictHostKeyChecking=no {{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}
+    scp -o StrictHostKeyChecking=no /root/{{ oooq_tar_name }} {{ http_user }}@{{ http_server }}:{{ http_server_path }}

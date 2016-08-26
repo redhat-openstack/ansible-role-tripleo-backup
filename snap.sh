@@ -4,6 +4,7 @@ ACTION=$2
 VIRTHOST=$3
 HTTP_SRV=${4:-"artifacts.ci.centos.org"}
 HTTP_URL=${5:-"artifacts/rdo/images/liberty/ooo-snap"}
+RELEASE=${6:-"liberty"}
 # create virtual env
 virtualenv --system-site-packages $WORKDIR
 . $WORKDIR/bin/activate

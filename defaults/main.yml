@@ -6,6 +6,8 @@ virthost_user: root
 virthost_key: "~/.ssh/id_rsa"
 undercloud_ip: "$UC_IP"
 
+release: liberty
+
 oooq_files:
   - { file: "id_rsa_undercloud", mode: 600 }
   - { file: "id_rsa_virt_host", mode: 600 }
@@ -56,7 +58,7 @@ services:
 
 http_server: rhos-release.virt.bos.redhat.com
 http_user: jenkins
-http_path: ci-images/live/rdo/liberty/
+http_path: "ci-images/live/rdo/{{ release }}/"
 http_server_path: "/var/www/html/{{ http_path }}"
 proto: http
 # this option allow user to directly upload the backup, instead of fetching the
