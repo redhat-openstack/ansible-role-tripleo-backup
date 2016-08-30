@@ -5,8 +5,8 @@
   retries: 30
   delay: 10
   shell: >
-    ip=$(virsh dumpxml undercloud | awk -F "'" '/mac address/ { print $2; exit }');
-    ip neigh | grep $ip |  awk '{ print $1 }';
+    mac=$(virsh dumpxml undercloud | awk -F "'" '/mac address/ { print $2; exit }');
+    ip neigh | grep $mac |  awk '{ print $1 }';
 
 - name: set fact for undercloud ip
   set_fact: undercloud_ip={{ undercloudip.stdout }}

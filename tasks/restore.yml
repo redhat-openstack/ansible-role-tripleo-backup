@@ -54,7 +54,7 @@
   register: download
   get_url:
     url: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
-    dest: "{{ oooq_tar_path }}"
+    dest: "{{ oooq_tar_path }}/{{ oooq_tar_name }}"
 
 - name: test if oooq tmp tar dir is present
   register: test_dir
