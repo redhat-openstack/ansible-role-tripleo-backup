@@ -16,10 +16,10 @@
   tags:
     - tripleo-restore
 
-- include: jenkins.yml
-  when: jenkins
+- include: restore_config.yml
+  when: restore_config
   tags:
-    - tripleo-jenkins
+    - tripleo-restore-config
 
 - include: sanity.yml
   when: sanity

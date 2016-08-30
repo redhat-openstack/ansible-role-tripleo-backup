@@ -7,5 +7,5 @@
   roles:
     - { role: tripleo-backup,
         restore: true,
-        jenkins: true,
+        restore_config: true,
         oooq_tar_path: '/home' }

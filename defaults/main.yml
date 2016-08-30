@@ -48,7 +48,7 @@ restore: false
 upload: false
 # this option set to true, will enable the ansible file set up in order to run
 # a job at the end of the restore.
-jenkins: false
+restore_config: false
 sanity: false
 
 services:
