@@ -32,6 +32,11 @@
         virsh net-undefine {{ item }}
     fi
 
+- name: undefine pool
+  ignore_errors: true
+  shell: >
+    virsh pool-undefine {{ pool_name }}
+
 - name: destroy pool
   ignore_errors: true
   shell: >
