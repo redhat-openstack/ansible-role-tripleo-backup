@@ -32,15 +32,17 @@
         virsh net-undefine {{ item }}
     fi
 
-- name: undefine pool
-  ignore_errors: true
-  shell: >
-    virsh pool-undefine {{ pool_name }}
-
 - name: destroy pool
+  register: destroypool
   ignore_errors: true
   shell: >
     virsh pool-destroy {{ pool_name }}
+
+- name: force remove pool
+  when: destroypool.rc == 1
+  shell: >
+    rm -f /var/run/libvirt/storage/{{ pool_name }}.xml;
+    systemctl restart libvirtd
 
 - name: create tripleo vms working dir
   file:
