@@ -1,5 +1,28 @@
 ---
+- name: check for ssh config args in ansible.cfg
+  register: ssh_args
+  ignore_errors: true
+  delegate_to: localhost
+  shell: >
+    grep ssh.config.ansible ansible.cfg
+
+# warning, remove ssh.config.ansible from ansible.cfg
+- name: ansible config check
+  debug: msg="Please ensure the following is added to the ansible.cfg file, 'ssh_args = -F ssh.config.ansible from your ansible.cfg'"
+  failed_when: ssh_args.rc != 0
+  delegate_to: localhost
+  when: ssh_args.rc != 0
+
 - name: check openstack services
   service: name={{item}} state=started
   sudo: yes
   with_items: "{{ services }}"
+
+- name: check all openstack services
+  shell: >
+    systemctl | grep openstack
+  register: services_result
+
+- name: print services
+  debug: var=services_result.stdout_lines
+
