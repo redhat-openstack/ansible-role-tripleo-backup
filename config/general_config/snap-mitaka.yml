@@ -1,0 +1,4 @@
+---
+http_server: rhos-release.virt.bos.redhat.com
+http_path: ci-images/live/rdo/mitaka
+oooq_tar_path: /tmp
