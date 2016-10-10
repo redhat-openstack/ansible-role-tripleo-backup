@@ -25,3 +25,8 @@
   when: sanity
   tags:
     - tripleo-restore-sanity
+
+- include: post.yml
+  when: clean_up
+  tags:
+    - tripleo-restore-sanity
