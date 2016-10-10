@@ -1,4 +1,17 @@
 ---
+- name: check for ssh config args in ansible.cfg
+  register: ssh_args
+  ignore_errors: true
+  delegate_to: localhost
+  shell: >
+    grep ssh.config.ansible ansible.cfg
+
+# warning, remove ssh.config.ansible from ansible.cfg
+- name: ansible config check
+  debug: msg="Please remove 'ssh_args = -F ssh.config.ansible from your ansible.cfg'"
+  failed_when: ssh_args.rc == 0
+  when: ssh_args.rc == 0
+
 - name: check or install required packages
   yum: name={{ item }} state=latest
   with_items:
@@ -44,12 +57,6 @@
     rm -f /var/run/libvirt/storage/{{ pool_name }}.xml;
     systemctl restart libvirtd
 
-- name: create tripleo vms working dir
-  file:
-    path: "{{ oooq_tar_path }}"
-    state: directory
-  become: true
-
 - name: download tar file
   register: download
   get_url:
@@ -60,14 +67,21 @@
   register: test_dir
   ignore_errors: true
   shell: >
-    test -d /tmp/var/oooqvms
+    test -d "{{ oooq_tar_path }}/var/oooqvms"
+
+- name: create tripleo vms working dir
+  when: test_dir.rc != 0
+  file:
+    path: "{{ oooq_tar_path }}"
+    state: directory
+  become: true
 
 - name: untar tripleo vms
-  when: download.changed|bool or test_dir.rc == 1
-  unarchive:
-    src: "{{ oooq_tar_path }}/{{ oooq_tar_name }}"
-    dest: "/tmp"
-    copy: no
+  when: download.changed|bool or test_dir.rc != 0
+  shell: >
+    pushd "{{ oooq_tar_path }}";
+    tar -xvzf "{{ oooq_tar_name }}"
+
 # @TODO: matbu test out this rather than fetch and untar
 #    src: "{{ proto }}://{{ http_server }}/{{ http_path }}/{{ oooq_tar_name }}"
 
@@ -88,3 +102,18 @@
   shell: >
     virsh create {{ oooq_vms_path }}/{{ item }}.xml
   with_items: "{{ vms }}"
+
+# hack, FIX_ME
+- name: check for ssh config args in ansible.cfg
+  register: ssh_args
+  ignore_errors: true
+  delegate_to: localhost
+  shell: >
+    grep ssh.config.ansible ansible.cfg
+
+# hack, FIX_ME
+- name: add ssh_args to ansible.cfg if missing
+  when: ssh_args != 0
+  delegate_to: localhost
+  shell: >
+    echo "ssh_args = -F ssh.config.ansible" >> ansible.cfg
