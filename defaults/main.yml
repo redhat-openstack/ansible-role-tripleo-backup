@@ -50,6 +50,7 @@ upload: false
 # a job at the end of the restore.
 restore_config: false
 sanity: false
+clean_up: false
 
 services:
   - neutron-server

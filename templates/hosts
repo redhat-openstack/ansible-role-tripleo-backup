@@ -1,6 +1,6 @@
 localhost ansible_connection=local
 
-{{ virthost }} ansible_host={{ virthost }} ansible_user=stack ansible_private_key_file=id_rsa_virt_host undercloud_ip={{ undercloud_ip }}
+{{ virthost }} ansible_host={{ virthost }} undercloud_ip={{ undercloud_ip }}
 
 undercloud ansible_host=undercloud ansible_user=stack ansible_private_key_file=id_rsa_undercloud undercloud_ip={{ undercloud_ip }}
 
