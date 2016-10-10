@@ -1,4 +1,17 @@
 ---
+# Add the virthost to the in-memory inventory. The inventory is not
+# written out to disk unless you call the `tripleo-inventory` role.
+- name: Add the virthost to the inventory
+  hosts: localhost
+  tasks:
+    - name: Add virthost
+      add_host:
+        name: "{{virthost}}"
+        groups: "virthost"
+        ansible_fqdn: "{{ virthost }}"
+        ansible_user: "root"
+        ansible_host: "{{ virthost }}"
+
 - name: Sanity checks the undercloud services
   hosts: undercloud
   gather_facts: no
@@ -9,7 +22,7 @@
         sanity: true,
         services: ["openstack-glance-api"] }
 
-- name: Sanity checks the overcloud services
+- name: Sanity checks the overcloud controller services
   hosts: controller
   gather_facts: no
   tags:
@@ -18,3 +31,22 @@
     - { role: tripleo-backup,
         sanity: true,
         services: ["openstack-glance-api", "neutron-server"] }
+
+- name: Sanity checks the overcloud compute services
+  hosts: controller
+  gather_facts: no
+  tags:
+    - tripleo-restore-oc-sanity
+  roles:
+    - { role: tripleo-backup,
+        sanity: true,
+        services: ["openstack-nova-compute", "openstack-nova-api"] }
+
+- name: clean up
+  hosts: localhost
+  gather_facts: no
+  tags:
+    - tripleo-restore-oc-sanity
+  roles:
+    - { role: tripleo-backup,
+        cleanup: true }
