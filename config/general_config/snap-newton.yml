@@ -1,0 +1,4 @@
+---
+http_server: images.rdoproject.org
+http_path: ooo-snap/newton
+oooq_tar_path: /tmp
