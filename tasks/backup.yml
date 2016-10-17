@@ -2,7 +2,17 @@
 - name: stop oooq vms
   ignore_errors: true
   shell: >
+    virsh shutdown {{ item }};
     virsh destroy {{ item }}
+  with_items: "{{ vms }}"
+
+- name: wait until vm is down
+  register: vmstate
+  until: vmstate.stdout != 'running'
+  retries: 30
+  delay: 10
+  shell: >
+    virsh list --all | grep {{ item }} |awk '{ print $3; }'
   with_items: "{{ vms }}"
 
 - name: remove tripleo vms working dir
