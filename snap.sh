@@ -19,9 +19,9 @@ else
     pip install --no-cache-dir -r requirements.txt
 fi
 cat <<EOF> hosts
-$VIRTHOST ansible_host=$VIRTHOST ansible_user=root ansible_private_key_file=~/.ssh/id_rsa
+$VIRTHOST ansible_host=$VIRTHOST ansible_user=stack ansible_private_key_file=~/.ssh/id_rsa
 [virthost]
-$VIRTHOST
+virthost
 EOF
 # launch ansible
 if [ ! -f "ssh.config.ansible" ]; then
