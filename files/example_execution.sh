@@ -25,14 +25,6 @@ fi
 git clone http://github.com/openstack/tripleo-quickstart.git
 git clone https://github.com/redhat-openstack/ansible-role-tripleo-backup.git
 
-# REMOVE ME
-pushd ansible-role-tripleo-backup
-git remote add gerrit https://review.gerrithub.io/redhat-openstack/ansible-role-tripleo-backup
-git fetch --all
-git review -d I2dba310c5259c5f513df2a476042e76b7b61aa88
-popd
-# REMOVE ME
-
 echo "file://$WORKSPACE/ansible-role-tripleo-backup/#egg=ansible-role-tripleo-backup >> $WORKSPACE/tripleo-quickstart/quickstart-extras-requirements.txt"
 echo "file://$WORKSPACE/ansible-role-tripleo-backup/#egg=ansible-role-tripleo-backup" >> $WORKSPACE/tripleo-quickstart/quickstart-extras-requirements.txt
 
